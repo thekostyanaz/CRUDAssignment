@@ -1,0 +1,45 @@
+﻿@model CRUDAssignment.Models.StockTrade
+
+@{
+	ViewBag.Title = "Home";
+}
+
+	<div class="box trading-panel">
+		<div class="flex trading-panel-flex">
+			<div id="stock-price-panel">
+				<div class="stock">
+					<div class="stock-title">@Model.StockName (@Model.StockSymbol)</div>
+					<div class="stock-price">
+						<b id="StockCurrency" class="text-grey">$</b>
+						<b id="StockPrice">@Model.Price.ToString("0.00", CultureInfo.InvariantCulture)</b>
+					</div>
+				</div>
+			</div>
+
+			<div id="new-order-panel">
+				<form method="post">
+					<div class="flex flex-direction-vertical">
+
+						<h3 class="text-grey mb">New Order</h3>
+						
+						<div>
+							<label for="Quantity" class="form-label pt">Quantity:</label>
+						</div>
+						<div class="w-25">
+							<input type="number" class="form-input mb" id="Quantity" name="Quantity" value="100" />
+						</div>
+					</div>
+
+					<div class="flex-1 button-panel">
+						<button class="button button-red-back" formaction="~/Trade/SellOrder">Sell</button>
+						<button class="button button-green-back" formaction="~/Trade/BuyOrder">Buy</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<input type="hidden" id="StockSymbolId" value="@Model.StockSymbol">
+	<input type="hidden" id="FinnhubTokenId" value="@ViewBag.FinnhubToken">
+
+<script src="~/Scripts/FinnhubScript.js"></script>

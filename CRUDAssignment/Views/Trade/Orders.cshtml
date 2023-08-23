@@ -1,0 +1,29 @@
+﻿@model CRUDAssignment.Models.Orders
+
+@{
+	ViewBag.Title = "Orders";
+}
+
+<div class="flex orders-list">
+	<div id="buy-orders-list">
+		<div class="box">
+			<h3 class="text-grey">Buy Orders</h3>
+
+			@foreach (var order in Model.BuyOrders)
+			{
+				await Html.RenderPartialAsync("_OrderPartialView", order);
+			}
+		</div>
+	</div>
+
+	<div id="sell-orders-list">
+		<div class="box">
+			<h3 class="text-grey">Sell Orders</h3>
+
+			@foreach (var order in Model.SellOrders)
+			{
+				await Html.RenderPartialAsync("_OrderPartialView", order);
+			}
+		</div>
+	</div>
+</div>

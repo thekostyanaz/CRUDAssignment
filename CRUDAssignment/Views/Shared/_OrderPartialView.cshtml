@@ -1,0 +1,20 @@
+﻿@model ServiceContracts.DTO.OrderResponse
+@{
+	var stockPrice = Math.Round(Model.Price, 2);
+	var tradeAmount = Math.Round((stockPrice * Model.Quantity), 2);
+}
+<div class="border-bottom mt ml">
+	<div>
+		<b>@Model.StockName (@Model.StockSymbol)</b>
+	</div>
+	<h4>
+		<b>@Model.Quantity</b> 
+		<span class="text-grey">shares at $</span> <b>@stockPrice.ToString(CultureInfo.InvariantCulture)</b>
+	</h4>
+	<h4 class="mt">
+		<span class="text-grey">Trade Amount: $</span>
+		<b>@tradeAmount.ToString(CultureInfo.InvariantCulture)</b>
+	</h4>
+
+	<h3 class="mt text-grey">@Model.DateAndTimeOfOrder.ToString("dd MMMM yyyy hh:mm:ss tt", CultureInfo.InvariantCulture)</h3>
+</div>
