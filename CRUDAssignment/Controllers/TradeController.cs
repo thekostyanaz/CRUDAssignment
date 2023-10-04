@@ -29,7 +29,6 @@ namespace CRUDAssignment.Controllers
 		[Route("Index")]
 		public async Task<IActionResult> Index()
 		{
-			//var defaultStockSymbol = _options.DefaultStockSymbol ?? "MSFT";
 			var priceQuoteResponse = await _finnhubService.GetStockPriceQuote(_defaultStockSymbol);
 			var profileResponse = await _finnhubService.GetCompanyProfile(_defaultStockSymbol);
 
