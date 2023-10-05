@@ -60,20 +60,38 @@ namespace CRUDAssignment.Controllers
 
 		public async Task<IActionResult> BuyOrder(BuyOrderRequest buyOrderRequest) 
 		{
+			buyOrderRequest.DateAndTimeOfOrder = DateTime.Now;
+			ModelState.Clear();
+
+			if (!ModelState.IsValid) 
+			{
+				var stockTrade = new StockTrade { StockSymbol = buyOrderRequest.StockSymbol, StockName = buyOrderRequest.StockName, Price = buyOrderRequest.Price, Quantity = buyOrderRequest.Quantity };
+				return View("Index", stockTrade);
+			}
+
 			var priceQuoteResponse = await _finnhubService.GetStockPriceQuote(_defaultStockSymbol);
 			var profileResponse = await _finnhubService.GetCompanyProfile(_defaultStockSymbol);
-
 			buyOrderRequest.StockSymbol = profileResponse?["ticker"].ToString();
 			buyOrderRequest.StockName = profileResponse?["name"].ToString();
 			buyOrderRequest.Price = Convert.ToDouble(priceQuoteResponse?["c"].ToString());
 			buyOrderRequest.DateAndTimeOfOrder = DateTime.Now;
 			_stockService.CreateBuyOrder(buyOrderRequest);
-			return RedirectToAction("Index", "Trade");
+			
+			return RedirectToAction("Index");
 		}
 
 		[Route("SellOrder")]
 		public async Task<IActionResult> SellOrder(SellOrderRequest sellOrderRequest)
 		{
+			sellOrderRequest.DateAndTimeOfOrder = DateTime.Now;
+			ModelState.Clear();
+
+			if (!ModelState.IsValid)
+			{
+				var stockTrade = new StockTrade { StockSymbol = sellOrderRequest.StockSymbol, StockName = sellOrderRequest.StockName, Price = sellOrderRequest.Price, Quantity = sellOrderRequest.Quantity };
+				return View("Index", stockTrade);
+			}
+
 			var priceQuoteResponse = await _finnhubService.GetStockPriceQuote(_defaultStockSymbol);
 			var profileResponse = await _finnhubService.GetCompanyProfile(_defaultStockSymbol);
 
@@ -82,7 +100,7 @@ namespace CRUDAssignment.Controllers
 			sellOrderRequest.Price = Convert.ToDouble(priceQuoteResponse?["c"].ToString());
 			sellOrderRequest.DateAndTimeOfOrder = DateTime.Now;
 			_stockService.CreateSellOrder(sellOrderRequest);
-			return RedirectToAction("Index", "Trade");
+			return RedirectToAction("Index");
 		}
 	}
 }

@@ -8,6 +8,7 @@ socket.onmessage = event => {
     console.log('Message from server ', event.data);
     parsedJson = JSON.parse(event.data);
     document.querySelector("#StockPrice").innerHTML = getPrice(parsedJson);
+    document.querySelector("#Price").innerHTML = getPrice(parsedJson;
 };
 
 socket.onclose = event => {

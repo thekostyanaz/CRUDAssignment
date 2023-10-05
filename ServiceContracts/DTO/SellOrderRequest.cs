@@ -15,9 +15,9 @@ namespace ServiceContracts.DTO
 		[MinimumDateValidation("2000-01-01")]
 		public DateTime DateAndTimeOfOrder { get; set; }
 
-		[Range(1, 100000, ErrorMessage = "Quantity value should be between 1 and 100000")]
+        [Range(1, 100000, ErrorMessage = "Quantity value should be between 1 and 100000")]
 		public uint Quantity { get; set; }
-
+		
 		[Range(1, 1000, ErrorMessage = "Price value should be between 1 and 10000")]
 		public double Price { get; set; }
 
