@@ -4,6 +4,7 @@ using ServiceContracts;
 using CRUDAssignment.Models;
 using CRUDAssignment.Options;
 using ServiceContracts.DTO;
+using Rotativa.AspNetCore;
 
 namespace CRUDAssignment.Controllers
 {
@@ -46,7 +47,7 @@ namespace CRUDAssignment.Controllers
 		[Route("Orders")]
 		public async Task<IActionResult> Orders() 
 		{
-			var buyOrders =_stockService.GetBuyOrders();
+			var buyOrders = _stockService.GetBuyOrders();
 			var sellOrders = _stockService.GetSellOrders();
 			var orders = new Orders()
 			{
@@ -75,7 +76,8 @@ namespace CRUDAssignment.Controllers
 			buyOrderRequest.StockName = profileResponse?["name"].ToString();
 			buyOrderRequest.Price = Convert.ToDouble(priceQuoteResponse?["c"].ToString());
 			buyOrderRequest.DateAndTimeOfOrder = DateTime.Now;
-			_stockService.CreateBuyOrder(buyOrderRequest);
+			
+			await _stockService.CreateBuyOrder(buyOrderRequest);
 			
 			return RedirectToAction("Index");
 		}
@@ -99,8 +101,30 @@ namespace CRUDAssignment.Controllers
 			sellOrderRequest.StockName = profileResponse?["name"].ToString();
 			sellOrderRequest.Price = Convert.ToDouble(priceQuoteResponse?["c"].ToString());
 			sellOrderRequest.DateAndTimeOfOrder = DateTime.Now;
-			_stockService.CreateSellOrder(sellOrderRequest);
+			
+			await _stockService.CreateSellOrder(sellOrderRequest);
+			
 			return RedirectToAction("Index");
+		}
+
+		[Route("OrdersPDF")]
+		public IActionResult TradeOrdersPdf() 
+		{
+			var orders = new Orders()
+			{
+				BuyOrders = _stockService.GetBuyOrders(),
+				SellOrders = _stockService.GetSellOrders()
+			};
+
+			
+			return new ViewAsPdf("OrdersPDF", orders, ViewData) 
+			{
+				PageMargins = new Rotativa.AspNetCore.Options.Margins() 
+				{
+					Top = 20, Right = 20, Bottom = 20, Left = 20
+				},
+				PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape
+			};
 		}
 	}
 }

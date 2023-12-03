@@ -1,0 +1,43 @@
+﻿@model CRUDAssignment.Models.Orders
+
+@{
+	Layout = null;
+}
+
+<link href="@($"http://{Context.Request.Host.ToString()}")/Styles/StyleSheet.css" rel="stylesheet" />
+<table class="table w-100 mt">
+	<thead>
+		<tr>
+			<th>Date and Time</th>
+			<th>Stock</th>
+			<th>Order Type</th>
+			<th>Quantity</th>
+			<th>Price</th>
+			<th>Trade Amount</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (SellOrderResponse sellOrderResponse in Model.SellOrders)
+		{
+			<tr>
+				<td>@sellOrderResponse.DateAndTimeOfOrder</td>
+				<td>@sellOrderResponse.StockName</td>
+				<td>SellOrder</td>
+				<td>@sellOrderResponse.Quantity</td>
+				<td>@sellOrderResponse.Price</td>
+				<td>@sellOrderResponse.TradeAmount</td>
+			</tr>
+		}
+		@foreach (BuyOrderResponse buyOrderResponse in Model.BuyOrders)
+		{
+			<tr>
+				<td>@buyOrderResponse.DateAndTimeOfOrder</td>
+				<td>@buyOrderResponse.StockName</td>
+				<td>BuyOrder</td>
+				<td>@buyOrderResponse.Quantity</td>
+				<td>@buyOrderResponse.Price</td>
+				<td>@buyOrderResponse.TradeAmount</td>
+			</tr>
+		}
+	</tbody>
+</table>

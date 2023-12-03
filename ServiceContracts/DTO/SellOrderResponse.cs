@@ -30,16 +30,20 @@ namespace ServiceContracts.DTO
 
 	public static class SellOrderExtensions
 	{
-		public static SellOrderResponse ToSellOrderResponse(this SellOrder buyOrder)
+		public static SellOrderResponse ToSellOrderResponse(this SellOrder sellOrder)
 		{
+			var stockPrice = Math.Round(sellOrder.Price, 2);
+			var tradeAmount = Math.Round((stockPrice * sellOrder.Quantity), 2);
+
 			return new SellOrderResponse
 			{
-				SellOrderID = buyOrder.SellOrderID,
-				StockSymbol = buyOrder.StockSymbol,
-				StockName = buyOrder.StockName,
-				DateAndTimeOfOrder = buyOrder.DateAndTimeOfOrder,
-				Quantity = buyOrder.Quantity,
-				Price = buyOrder.Price
+				SellOrderID = sellOrder.SellOrderID,
+				StockSymbol = sellOrder.StockSymbol,
+				StockName = sellOrder.StockName,
+				DateAndTimeOfOrder = sellOrder.DateAndTimeOfOrder,
+				Quantity = sellOrder.Quantity,
+				Price = stockPrice,
+				TradeAmount = tradeAmount
 			};
 		}
 	}

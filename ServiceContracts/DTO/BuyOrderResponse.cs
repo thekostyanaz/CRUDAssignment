@@ -32,6 +32,9 @@ namespace ServiceContracts.DTO
 	{
 		public static BuyOrderResponse ToBuyOrderResponse(this BuyOrder buyOrder) 
 		{
+			var stockPrice = Math.Round(buyOrder.Price, 2);
+			var tradeAmount = Math.Round((stockPrice * buyOrder.Quantity), 2);
+
 			return new BuyOrderResponse
 			{
 				BuyOrderID = buyOrder.BuyOrderID,
@@ -39,7 +42,8 @@ namespace ServiceContracts.DTO
 				StockName = buyOrder.StockName,
 				DateAndTimeOfOrder = buyOrder.DateAndTimeOfOrder,
 				Quantity = buyOrder.Quantity,
-				Price = buyOrder.Price
+				Price = stockPrice,
+				TradeAmount = tradeAmount
 			};
 		}
 	}
