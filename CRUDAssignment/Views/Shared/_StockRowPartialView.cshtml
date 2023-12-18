@@ -1,0 +1,9 @@
+﻿@model Stock
+
+<li class="p">
+	<a asp-controller="Stocks" asp-action="Explore" asp-route-stock=@Model.StockSymbol>
+		<h4>@Model.StockName</h4>
+		<h3 class="text-grey" id="stockSymbol">@($"({Model.StockSymbol})")</h3>
+	</a>
+</li>
+

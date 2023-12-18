@@ -1,4 +1,5 @@
 ﻿using Entities;
+using RepositoryContracts;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using Services.Helpers;
@@ -7,11 +8,11 @@ namespace Services
 {
 	public class StockService : IStockService
 	{
-		private readonly StockMarketDbContext _db;
+		private readonly IStocksRepository _repository;
 
-		public StockService(StockMarketDbContext stockMarketDbContext) 
+		public StockService(IStocksRepository repository) 
 		{
-			_db = stockMarketDbContext;
+			_repository = repository;
 		}
 
 		public async Task<BuyOrderResponse> CreateBuyOrder(BuyOrderRequest? request)
@@ -23,9 +24,7 @@ namespace Services
 
 			ValidationHelper.ModelValidation(request);
 
-			var buyOrder = request.ToBuyOrder();
-
-			await _db.sp_InsertBuyOrderAsync(buyOrder);
+			var buyOrder = await _repository.CreateBuyOrder(request.ToBuyOrder());
 
 			return buyOrder.ToBuyOrderResponse();
 		}
@@ -39,21 +38,21 @@ namespace Services
 
 			ValidationHelper.ModelValidation(sellOrderRequest);
 
-			var sellOrder = sellOrderRequest.ToSellOrder();
-
-			await _db.sp_InsertSellOrderAsync(sellOrder);
+			var sellOrder = await _repository.CreateSellOrder(sellOrderRequest.ToSellOrder());
 
 			return sellOrder.ToSellOrderResponse();
 		}
 
-		public List<BuyOrderResponse> GetBuyOrders()
+		public async Task<List<BuyOrderResponse>> GetBuyOrders()
 		{
-			return _db.sp_GetBuyOrders().Select(temp => temp.ToBuyOrderResponse()).ToList();
+			var buyOrders = await _repository.GetBuyOrders();
+			return buyOrders.Select(temp => temp.ToBuyOrderResponse()).ToList();
 		}
 
-		public List<SellOrderResponse> GetSellOrders()
+		public async Task<List<SellOrderResponse>> GetSellOrders()
 		{
-			return _db.sp_GetSellOrders().Select(temp => temp.ToSellOrderResponse()).ToList();
+			var sellOrders = await _repository.GetSellOrders();
+			return sellOrders.Select(temp => temp.ToSellOrderResponse()).ToList();
 		}
 	}
 }

@@ -1,6 +1,6 @@
-﻿namespace ServiceContracts
+﻿namespace RepositoryContracts
 {
-	public interface IFinnhubService
+	public interface IFinnhubRepository
 	{
 		Task<Dictionary<string, object>?> GetCompanyProfile(string stockSymbol);
 

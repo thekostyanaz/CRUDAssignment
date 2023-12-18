@@ -35,20 +35,20 @@ namespace CRUDAssignment.Controllers
 
 			var stockTrade = new StockTrade()
 			{
-				StockSymbol = profileResponse["ticker"].ToString(),
-				StockName = profileResponse["name"].ToString(),
-				Price = Convert.ToDouble(priceQuoteResponse["c"].ToString())
+				StockSymbol = profileResponse?["ticker"].ToString(),
+				StockName = profileResponse?["name"].ToString(),
+				Price = Convert.ToDouble(priceQuoteResponse?["c"].ToString())
 			};
 
-			ViewBag.FinnhubToken = _configuration["FinnhubToken"].ToString();
+			ViewBag.FinnhubToken = _configuration?["FinnhubToken"]?.ToString();
 			return View(stockTrade);
 		}
 
 		[Route("Orders")]
 		public async Task<IActionResult> Orders() 
 		{
-			var buyOrders = _stockService.GetBuyOrders();
-			var sellOrders = _stockService.GetSellOrders();
+			var buyOrders = await _stockService.GetBuyOrders();
+			var sellOrders = await _stockService.GetSellOrders();
 			var orders = new Orders()
 			{
 				BuyOrders = buyOrders,
@@ -108,12 +108,12 @@ namespace CRUDAssignment.Controllers
 		}
 
 		[Route("OrdersPDF")]
-		public IActionResult TradeOrdersPdf() 
+		public async Task<IActionResult> TradeOrdersPdf() 
 		{
 			var orders = new Orders()
 			{
-				BuyOrders = _stockService.GetBuyOrders(),
-				SellOrders = _stockService.GetSellOrders()
+				BuyOrders = await _stockService.GetBuyOrders(),
+				SellOrders = await _stockService.GetSellOrders()
 			};
 
 			

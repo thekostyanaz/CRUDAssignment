@@ -1,0 +1,16 @@
+﻿@model Dictionary<string, object>
+
+<img src="@Model["logo"]" alt="Company logo" width="150" height="150"/>
+
+<h2>@Model["name"] (@Model["ticker"])</h2>
+
+<div class="pill mb">@Model["finnhubIndustry"]</div>
+
+<h3>Exchange: 
+	<b class="pill">@Model["exchange"]</b>
+</h3>
+
+<h1 class="mt">
+	<span class="text-grey">$</span>
+	<b>@ViewBag.Price.ToString(CultureInfo.InvariantCulture)</b>
+</h1>
