@@ -6,8 +6,17 @@ using Microsoft.EntityFrameworkCore;
 using Rotativa.AspNetCore;
 using RepositoryContracts;
 using Repositories;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((HostBuilderContext context, IServiceProvider services, LoggerConfiguration loggerConfiguration) => 
+{
+	loggerConfiguration
+		.ReadFrom.Configuration(context.Configuration)
+		.ReadFrom.Services(services);
+});
+
 builder.Services.AddHttpClient();
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<TradingOptions>(builder.Configuration.GetSection("TradingOptions"));

@@ -16,20 +16,24 @@ namespace CRUDAssignment.Controllers
 		private readonly TradingOptions _options;
 		private readonly IConfiguration _configuration;
 		private readonly string _defaultStockSymbol;
+		private readonly ILogger<TradeController> _logger;
 
-		public TradeController(IFinnhubService finnhubService, IStockService stockService, IOptions<TradingOptions> tradingOptions, IConfiguration configuration)
+		public TradeController(IFinnhubService finnhubService, IStockService stockService, IOptions<TradingOptions> tradingOptions, IConfiguration configuration, ILogger<TradeController> logger)
 		{
 			_finnhubService = finnhubService;
 			_stockService = stockService;
 			_options = tradingOptions.Value;
 			_configuration = configuration;
 			_defaultStockSymbol = _options.DefaultStockSymbol ?? "MSFT";
+			_logger = logger;
 		}
 
 		[Route("/")]
 		[Route("Index")]
 		public async Task<IActionResult> Index()
 		{
+			_logger.LogInformation("Index action method of TradeController");
+
 			var priceQuoteResponse = await _finnhubService.GetStockPriceQuote(_defaultStockSymbol);
 			var profileResponse = await _finnhubService.GetCompanyProfile(_defaultStockSymbol);
 
@@ -47,6 +51,8 @@ namespace CRUDAssignment.Controllers
 		[Route("Orders")]
 		public async Task<IActionResult> Orders() 
 		{
+			_logger.LogInformation("Orders action method of TradeController");
+
 			var buyOrders = await _stockService.GetBuyOrders();
 			var sellOrders = await _stockService.GetSellOrders();
 			var orders = new Orders()
@@ -61,6 +67,8 @@ namespace CRUDAssignment.Controllers
 
 		public async Task<IActionResult> BuyOrder(BuyOrderRequest buyOrderRequest) 
 		{
+			_logger.LogInformation("BuyOrder action method of TradeController");
+
 			buyOrderRequest.DateAndTimeOfOrder = DateTime.Now;
 			ModelState.Clear();
 
@@ -85,6 +93,8 @@ namespace CRUDAssignment.Controllers
 		[Route("SellOrder")]
 		public async Task<IActionResult> SellOrder(SellOrderRequest sellOrderRequest)
 		{
+			_logger.LogInformation("SellOrder action method of TradeController");
+
 			sellOrderRequest.DateAndTimeOfOrder = DateTime.Now;
 			ModelState.Clear();
 
@@ -110,6 +120,8 @@ namespace CRUDAssignment.Controllers
 		[Route("OrdersPDF")]
 		public async Task<IActionResult> TradeOrdersPdf() 
 		{
+			_logger.LogInformation("TradeOrdersPdf action method of TradeController");
+
 			var orders = new Orders()
 			{
 				BuyOrders = await _stockService.GetBuyOrders(),

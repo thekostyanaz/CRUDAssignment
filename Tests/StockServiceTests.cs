@@ -1,6 +1,7 @@
 using AutoFixture;
 using Entities;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using RepositoryContracts;
 using ServiceContracts;
@@ -16,14 +17,16 @@ namespace Tests
 		private readonly IStockService _stockService;
 		private readonly IStocksRepository _stocksRepository;
 		private readonly Mock<IStocksRepository> _stockRepositoryMock;
+		private readonly Mock<ILogger<StockService>> _loggerMock;
 		private readonly IFixture _fixture;
 
 		public StockServiceTests() 
 		{
 			_fixture = new Fixture();
 			_stockRepositoryMock = new Mock<IStocksRepository>();
+			_loggerMock = new Mock<ILogger<StockService>>();
 			_stocksRepository = _stockRepositoryMock.Object;
-			_stockService = new StockService(_stocksRepository);
+			_stockService = new StockService(_stocksRepository, _loggerMock.Object);
 		}
 
 		#region CreateBuyOrder
