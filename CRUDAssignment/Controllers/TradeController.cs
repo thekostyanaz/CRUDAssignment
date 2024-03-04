@@ -5,6 +5,7 @@ using CRUDAssignment.Models;
 using CRUDAssignment.Options;
 using ServiceContracts.DTO;
 using Rotativa.AspNetCore;
+using CRUDAssignment.Filters.ActionFilters;
 
 namespace CRUDAssignment.Controllers
 {
@@ -57,26 +58,18 @@ namespace CRUDAssignment.Controllers
 			var sellOrders = await _stockService.GetSellOrders();
 			var orders = new Orders()
 			{
-				BuyOrders = buyOrders,
-				SellOrders = sellOrders
+				BuyOrders = buyOrders.OrderBy(o => o.DateAndTimeOfOrder).ToList(),
+				SellOrders = sellOrders.OrderBy(o => o.DateAndTimeOfOrder).ToList()
 			}; 
 			return View(orders);
 		}
 
 		[Route("BuyOrder")]
+		[TypeFilter(typeof(CreateOrderActionFilter))]
 
 		public async Task<IActionResult> BuyOrder(BuyOrderRequest buyOrderRequest) 
 		{
 			_logger.LogInformation("BuyOrder action method of TradeController");
-
-			buyOrderRequest.DateAndTimeOfOrder = DateTime.Now;
-			ModelState.Clear();
-
-			if (!ModelState.IsValid) 
-			{
-				var stockTrade = new StockTrade { StockSymbol = buyOrderRequest.StockSymbol, StockName = buyOrderRequest.StockName, Price = buyOrderRequest.Price, Quantity = buyOrderRequest.Quantity };
-				return View("Index", stockTrade);
-			}
 
 			var priceQuoteResponse = await _finnhubService.GetStockPriceQuote(_defaultStockSymbol);
 			var profileResponse = await _finnhubService.GetCompanyProfile(_defaultStockSymbol);
@@ -91,18 +84,10 @@ namespace CRUDAssignment.Controllers
 		}
 
 		[Route("SellOrder")]
+		[TypeFilter(typeof(CreateOrderActionFilter))]
 		public async Task<IActionResult> SellOrder(SellOrderRequest sellOrderRequest)
 		{
 			_logger.LogInformation("SellOrder action method of TradeController");
-
-			sellOrderRequest.DateAndTimeOfOrder = DateTime.Now;
-			ModelState.Clear();
-
-			if (!ModelState.IsValid)
-			{
-				var stockTrade = new StockTrade { StockSymbol = sellOrderRequest.StockSymbol, StockName = sellOrderRequest.StockName, Price = sellOrderRequest.Price, Quantity = sellOrderRequest.Quantity };
-				return View("Index", stockTrade);
-			}
 
 			var priceQuoteResponse = await _finnhubService.GetStockPriceQuote(_defaultStockSymbol);
 			var profileResponse = await _finnhubService.GetCompanyProfile(_defaultStockSymbol);
